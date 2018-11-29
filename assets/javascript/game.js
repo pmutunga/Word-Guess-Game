@@ -1,14 +1,12 @@
 // I need to define all the variables I will need to track the game
 
-const maxTries = 12; //Number of tries
+
 var userGuess; // Key the user pressed
 var guessedCountries = []; //stores countries user guessed.
-var countries = ["CANADA", "SWEDEN", "UGANDA", "FRANCE", "GREECE"];
+var countries = ["SPAIN", "MEXICO", "UGANDA", "FRANCE", "GERMANY"];
 var pickedCountry;
-var wrongGuess = [];
-var numGuessesrem = 6; //Remaining guesses
-var rightGuess = [];
-var pos;
+var answers = [];
+var remGuess = 12;
 var wins = 0; //Number of total wins
 
 // Variables to select HTLM tect to modify
@@ -39,12 +37,20 @@ function pickCountry(){
     // userGuess = event.key; 
     userGuess = String.fromCharCode(event.keyCode).toUpperCase();
     console.log(userGuess);
+    remGuess--;
+    console.log(remGuess);
+    remainingGuesses.innerHTML = remGuess;
+ 
+    // I need a way to decrement the value of remaining guesses when a user presses a key
+
     if (pickedCountry.indexOf(userGuess)>=0){
 
         console.log(pickedCountry.indexOf(userGuess));
     }
     else{
         console.log("try again");
+        answers.push(userGuess);
+        guessedLetters.innerHTML = answers;
     }
     
 
@@ -65,6 +71,14 @@ function pickCountry(){
     // }
 
 // I need to put the user's guesses in an array so I can display them on the page and also track # guesses remaining.
+
+
+// Display total wins.
+totalwins.innerHTML = wins;
+currentWord.innerHTML = pickedCountry;
+remainingGuesses.innerHTML = remGuess;
+guessedLetters.innerHTML = answers;
+
 
 
 

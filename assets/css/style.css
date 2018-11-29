@@ -1,0 +1,20 @@
+.maincontent {
+    margin-top: 20px;
+}
+
+gamecontent {
+
+    border: 1px solid #cccccc;
+}
+
+.staticInfo {
+    color: teal;
+
+}
+
+.dynamicInfo {
+
+color: orangered;
+font-weight: 400;
+font-size: 25px;
+}
