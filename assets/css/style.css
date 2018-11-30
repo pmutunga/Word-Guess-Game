@@ -14,7 +14,23 @@ gamecontent {
 
 .dynamicInfo {
 
-color: orangered;
+color:black;
 font-weight: 400;
 font-size: 25px;
+}
+
+#disppickedCountry{
+    letter-spacing: 15px;
+}
+
+.dispwin {
+
+    color: magenta;
+    letter-spacing: 10px;
+    font-size: 2rem;
+
+}
+
+#userMessage {
+    color: red;
 }

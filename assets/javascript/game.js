@@ -1,88 +1,124 @@
 // I need to define all the variables I will need to track the game
 
 
-var userGuess; // Key the user pressed
-var guessedCountries = []; //stores countries user guessed.
-var countries = ["SPAIN", "MEXICO", "UGANDA", "FRANCE", "GERMANY"];
-var pickedCountry;
-var answers = [];
-var remGuess = 12;
+
+var countries = ["SPAIN", "MEXICO", "UGANDA", "FRANCE", "GERMANY"]; //Variables required for game to start//List of winning countries
+var pickedCountry; //Random winning country that the computer selects
+var countryText = []; // this is an array that we'll use to store the letters of the pickedCountr
+var pickedCountryText = " "; //winning country displayed on screen. Making it text instead of array helps not to display commas.
+var maxTries;
+var remGuess;
 var wins = 0; //Number of total wins
 
+//Variables for tracking user interaction
+var userGuess; // Key the user pressed
+var guessedKeys = [];        // Stores the keys the user guessed
+var wrongGuess = []; //array of incorrect guesses.
+var letterPosition = [];//index of correct guesses
+
+
 // Variables to select HTLM tect to modify
-var totalwins = document.getElementById("totalwins");
-var currentWord = document.getElementById("currentWord");
-var remainingGuesses = document.getElementById("remainingGuesses");
-var guessedLetters = document.getElementById("guessedLetters");
+var dispgameInstr = document.getElementById("dispgameInstr");
+var disptotalWins = document.getElementById("disptotalWins");
+var disppickedCountry = document.getElementById("disppickedCountry");
+var dispremgGuesses = document.getElementById("dispremgGuesses");
+var dispguessedLetters = document.getElementById("dispguessedLetters");
+var dispuserMessage = document.getElementById("dispuserMessage");
 
-// Call functions
-pickCountry();
+/* Initialize the game.
+Display the text Press any key to start.
+Display # Wins as 0;
+Display Vacation country as a series of dashes
+Display # guesses as the maximum guesses allowed
+display letters guessed as blank.*/
 
 
+function initGame (){
 
+    //empty all arrays
+    guessedKeys = []; //Start with an empty guess;
+    wrongGuess = [];
+    letterPosition = []; 
+    
+    //Update content
 
-// Problem: How to get user input?
-/* I need a way to generate a word at random that I can use to check if the user guessed right.
-Pick a country at random from countries array.
-Create a function that picks a random country from the countries array countries */
+    dispgameInstr.innerHTML = "Press any key to start";
+    disptotalWins.innerText = wins;
+    dispguessedLetters.innerHTML = guessedKeys;
+    dispuserMessage.innerHTML = ""
+
+    //Pick a new country and display info
+    pickCountry();
+    getcountryText();
+    disppickedCountry.innerHTML = pickedCountryText;
+    maxTries = pickedCountry.length + 5;
+    console.log({maxTries});
+    remGuess = maxTries;
+    console.log({remGuess});
+    dispremgGuesses.innerHTML = remGuess;
+    
+   
+
+}
+
+/* Pick a random winning country */
 
 function pickCountry(){
-    var random =  Math.floor(Math.random() * countries.length);
-    pickedCountry = (countries[random]);
-    console.log(pickedCountry);
+  var random =  Math.floor(Math.random()*countries.length);
+  pickedCountry = countries[random];
+  console.log(pickedCountry);
+  
+}
+
+/* Display dashes on the screen that represent the winning country*/
+ function getcountryText() {
+     //find out the length of the pickedCountry
+          for (var i=0; i<pickedCountry.length; i++){
+        countryText.push("_");
+    //To display the dashes on screen without the commas, we'll use a string varaible and concatenate the array values to it.
+
+        pickedCountryText += countryText[i];
+
+     }
  }
 
- // I need a way to know what key the user has pressed and store it so I can use it later to compare.
- document.onkeyup = function(event){
-    // userGuess = event.key; 
+/*This function takes a letter and finds all instances of 
+appearance in the string and replaces them in the guess word.*/
+
+function checkGuess() {
+        for (var i=0; i<pickedCountry.length; i++) {
+        if(pickedCountry[i] === userGuess) {
+        console.log("letter matches a letter in pickedCountry");
+        letterPosition.push(i);
+        console.log({letterPosition});
+       } else {
+      console.log("try again");
+       }
+    }
+   }
+
+
+
+/* Event listener */
+
+document.onkeyup = function(event) {
+
     userGuess = String.fromCharCode(event.keyCode).toUpperCase();
-    console.log(userGuess);
-    remGuess--;
-    console.log(remGuess);
-    remainingGuesses.innerHTML = remGuess;
- 
-    // I need a way to decrement the value of remaining guesses when a user presses a key
+    console.log("You pressed " + userGuess);
+    //Check if user has pressed this key before.
 
-    if (pickedCountry.indexOf(userGuess)>=0){
-
-        console.log(pickedCountry.indexOf(userGuess));
-    }
-    else{
-        console.log("try again");
-        answers.push(userGuess);
-        guessedLetters.innerHTML = answers;
-    }
-    
-
-    /* I need to check if the letter the user selected is in the pickedCountry 
-  I need a way to check if the key the user pressed is correct.
-   If userGuess letter is in the pickedCountry, display it in the correct place. */
-    }
-
-//  Check if letter guessed in in pickedCountry using indexOf.
-
-
-    // If the key is correct, display it in the correct spot on the page and update number of guesses remaining.
-
-    //If the key is wrong, display it at the bottom of the page.
-    // wrongGuess.push(userGuess);
-    // console.log(wrongGuess);
-    // document.getElementById("wrongkey").innerHTML = wrongGuess;
-    // }
-
-// I need to put the user's guesses in an array so I can display them on the page and also track # guesses remaining.
-
-
-// Display total wins.
-totalwins.innerHTML = wins;
-currentWord.innerHTML = pickedCountry;
-remainingGuesses.innerHTML = remGuess;
-guessedLetters.innerHTML = answers;
+   
+        if (guessedKeys.indexOf(userGuess) >-1){
+            console.log("You've tried this before");
+        } else {
+            guessedKeys.push(userGuess);
+            console.log("game on!");
+            //decrement #remGuess
+            remGuess--;
+            console.log({remGuess});
+            checkGuess();
+        }
 
 
 
-
-
-
-
-
+}
