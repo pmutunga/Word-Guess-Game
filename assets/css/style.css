@@ -31,6 +31,12 @@ font-size: 25px;
 
 }
 
-#userMessage {
+#dispuserMessage {
     color: red;
+}
+
+/* Images */
+ #gameoverpic, #winpic{ 
+    display: none;
+    margin: 0 auto;
 }

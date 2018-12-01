@@ -2,19 +2,22 @@
 
 
 
-var countries = ["SPAIN", "MEXICO", "UGANDA", "FRANCE", "GERMANY"]; //Variables required for game to start//List of winning countries
+var countries = ["SPAIN", "MEXICO", "CUBA", "FRANCE", "GERMANY"]; //Variables required for game to start//List of winning countries
 var pickedCountry; //Random winning country that the computer selects
 var countryText = []; // this is an array that we'll use to store the letters of the pickedCountr
 var pickedCountryText = " "; //winning country displayed on screen. Making it text instead of array helps not to display commas.
 var maxTries;
 var remGuess;
 var wins = 0; //Number of total wins
+var isgameOver = false; //a boolean variable that will track if the game is over or not.
 
 //Variables for tracking user interaction
 var userGuess; // Key the user pressed
 var guessedKeys = [];        // Stores the keys the user guessed
 var wrongGuess = []; //array of incorrect guesses.
 var letterPosition = [];//index of correct guesses
+
+
 
 
 // Variables to select HTLM tect to modify
@@ -46,12 +49,13 @@ function initGame (){
     disptotalWins.innerText = wins;
     dispguessedLetters.innerHTML = guessedKeys;
     dispuserMessage.innerHTML = ""
+    
 
     //Pick a new country and display info
     pickCountry();
     getcountryText();
     disppickedCountry.innerHTML = pickedCountryText;
-    maxTries = pickedCountry.length + 5;
+    maxTries = pickedCountry.length + 3;
     console.log({maxTries});
     remGuess = maxTries;
     console.log({remGuess});
@@ -87,38 +91,121 @@ appearance in the string and replaces them in the guess word.*/
 
 function checkGuess() {
         for (var i=0; i<pickedCountry.length; i++) {
-        if(pickedCountry[i] === userGuess) {
-        console.log("letter matches a letter in pickedCountry");
-        letterPosition.push(i);
-        console.log({letterPosition});
-       } else {
-      console.log("try again");
-       }
+       			if(pickedCountry[i] === userGuess) {
+        				console.log("letter matches a letter in pickedCountry");
+        				letterPosition.push(i);
+        				console.log({letterPosition});
+      			 } 
+		} //end of for loop that checks of userGuess matches any letter in pickedCountry and pushes indices to letterPosition array.
+		
+		// if there are no indicies, remove a guess and update the remaining guesses displayed
+    if (letterPosition.length <= 0) {
+        remGuess--;
+        console.log({remGuess});
+		dispremgGuesses.innerHTML = remGuess;
+		wrongGuess.push(userGuess);
+        dispguessedLetters.innerHTML = wrongGuess;
+        dispuserMessage.innerHTML = "Try again."
+        letterPosition = [];
+        checkLoss();
+        
+    } //end of if
+	else {
+        // Loop through all the indicies and replace the '_' with a letter.
+        for(var i = 0; i < letterPosition.length; i++) {
+            countryText[letterPosition[i]] = userGuess;
+            console.log({ countryText});
+            dispuserMessage.innerHTML = ""
+		    pickedCountryText = countryText;
+            disppickedCountry.innerHTML = pickedCountryText;
+            checkWin();
+            letterPosition = [];
+            
+			
+        }//end of for
+	} //End of else
+		
+		
+} //End of function		
+   
+
+/* Determine if the game is over. Game is over if remGuess = 0; or the user has guessed the right country. If remGuess = 0, need to check if the user has won or lost*/
+
+
+//*if remGuess =0, then isgameOver = true; If remGuess >0 and the user guessed the right country, isgameOver = true. If remGuess > 0 but the user has still not guessed the right country, isgameOver = false; isgameOver starts as false.*/
+
+//First condition; check for a win by seeing if there are any remaining underscores in 
+// Checks for a win by seeing if there are any remaining underscores in the guessingword we are building.
+function checkWin() {
+    if(countryText.indexOf("_") === -1) {
+
+        wins++;
+        disptotalWins.innerText = wins;
+        dispuserMessage.innerHTML = "CONGRATULATIONS! YOU WON!"
+        isgameOver = true;
     }
-   }
+}
+
+function checkLoss(){
+
+    if(remGuess <= 0) {
+        dispuserMessage.innerHTML = "Sorry, you lost. Would you like to try again?"
+        isgameOver = true;
+    }
+}
+
+// Play to win a vacation
+function guessCountry(letter) {
+    if (remGuess > 0) {
+        // Make sure we didn't use this letter yet
+        if (guessedKeys.indexOf(userGuess) >-1){
+            console.log("You've tried this before");
+            dispuserMessage.innerHTML = "You've guessed this letter before. Try a different one."
+        } else {
+            guessedKeys.push(userGuess);
+            console.log("You haven't guessed this key before. Let's check it!");
+            checkGuess();
+        }
+    
+    }
+}
+
+/* Function to update display */
+
+function updateDisp(){
+
+    dispgameInstr.innerHTML = "Guess to Win a Vacation!";
+    disptotalWins.innerText = wins;
+    dispguessedLetters.innerHTML = guessedKeys;
+    dispuserMessage.innerHTML = ""
+    disppickedCountry.innerHTML = pickedCountryText;
 
 
+}
 
 /* Event listener */
 
 document.onkeyup = function(event) {
 
-    userGuess = String.fromCharCode(event.keyCode).toUpperCase();
-    console.log("You pressed " + userGuess);
-    //Check if user has pressed this key before.
+    if(isgameOver) {
+        
+        isgameOver = false;
+        dispuserMessage.innerHTML = "The game is Over."
+    } else {
+        userGuess = String.fromCharCode(event.keyCode).toUpperCase();
+        console.log("You pressed " + userGuess);
+        //Check if user has pressed this key before.
 
    
         if (guessedKeys.indexOf(userGuess) >-1){
             console.log("You've tried this before");
+            dispuserMessage.innerHTML = "You've guessed this letter before. Try a different one."
         } else {
             guessedKeys.push(userGuess);
-            console.log("game on!");
-            //decrement #remGuess
-            remGuess--;
-            console.log({remGuess});
+            console.log("You haven't guessed this key before. Let's check it!");
+            updateDisp();
             checkGuess();
         }
+    }
+} 
 
-
-
-}
