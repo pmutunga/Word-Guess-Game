@@ -12,8 +12,10 @@ body {
 
 .keyContent {
     background: none;
-    color:#e9ecef;
-        text-shadow: 3px 1px black;
+    color:white;
+    font-family: 'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
+    font-weight: 600;
+    text-shadow: 2px 1px black;
 }
 gamecontent {
 
