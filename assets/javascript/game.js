@@ -20,13 +20,22 @@ var letterPosition = [];//index of correct guesses
 
 
 
-// Variables to select HTLM tect to modify
-var dispgameInstr = document.getElementById("dispgameInstr");
+// Variables to select HTLM text to modify or manipulate.
+var dispgameInstr = document.getElementById("dispgameInstr");//This is the text on the gameContent div
 var disptotalWins = document.getElementById("disptotalWins");
 var disppickedCountry = document.getElementById("disppickedCountry");
-var dispremgGuesses = document.getElementById("dispremgGuesses");
+var dispremGuesses = document.getElementById("dispremGuesses");
 var dispguessedLetters = document.getElementById("dispguessedLetters");
 var dispuserMessage = document.getElementById("dispuserMessage");
+var dispimage = document.getElementById("startpic");
+var startGame = document.getElementById("startBtn");
+var dispkeyCont = document.getElementById("keyCont"); //This is the header on the jumbotron
+var dispkeySubcont = document.getElementById("keySubcont"); //This is the subheader in the jumbtron
+var dispGame = document.getElementById("gamecontent");//This is the div that hosts game content.
+
+//Initial state
+
+dispGame.style.display = "none";
 
 /* Initialize the game.
 Display the text Press any key to start.
@@ -38,32 +47,39 @@ display letters guessed as blank.*/
 
 function initGame (){
 
-    //empty all arrays
+    resetData();
+    
+    //Update content
+
+    
+    //Pick a new country and display info
+    pickCountry();
+    getcountryText();
+    UpdateContent();
+
+    //hide background image
+
+    dispGame.classList.add("gameStarted");
+    dispGame.style.display = "block";
+   
+    //hide start button
+    startGame.style.display = "none";
+
+    //Set isGameOver to false
+    isgameOver = false;
+
+}
+
+function resetData(){
+    //empty all arrays - but not the Wins array because we need to track that.
+    countryText = [];
+    pickedCountryText = " ";
     guessedKeys = []; //Start with an empty guess;
     wrongGuess = [];
     letterPosition = []; 
     
-    //Update content
-
-    dispgameInstr.innerHTML = "Press any key to start";
-    disptotalWins.innerText = wins;
-    dispguessedLetters.innerHTML = guessedKeys;
-    dispuserMessage.innerHTML = ""
-    
-
-    //Pick a new country and display info
-    pickCountry();
-    getcountryText();
-    disppickedCountry.innerHTML = pickedCountryText;
-    maxTries = pickedCountry.length + 3;
-    console.log({maxTries});
-    remGuess = maxTries;
-    console.log({remGuess});
-    dispremgGuesses.innerHTML = remGuess;
-    
-   
-
-}
+       
+ }
 
 /* Pick a random winning country */
 
@@ -71,6 +87,9 @@ function pickCountry(){
   var random =  Math.floor(Math.random()*countries.length);
   pickedCountry = countries[random];
   console.log(pickedCountry);
+  maxTries = pickedCountry.length + 3;
+  console.log({maxTries});
+  remGuess = maxTries;
   
 }
 
@@ -86,31 +105,68 @@ function pickCountry(){
      }
  }
 
-/*This function takes a letter and finds all instances of 
-appearance in the string and replaces them in the guess word.*/
+
+
+ function UpdateContent () {
+    dispgameInstr.innerHTML = "Press a key to guess!";
+    disppickedCountry.innerHTML = pickedCountryText;
+    dispremGuesses.innerHTML = remGuess;
+    disptotalWins.innerText = wins;
+    dispguessedLetters.innerHTML = wrongGuess;
+    dispuserMessage.innerHTML = "";
+    dispimage.src = "assets/images/kyle-glenn-598701-unsplash_1024.png";
+    dispkeyCont.innerHTML = "Win your dream vacation!!";
+    dispkeySubcont.innerHTML = "If you guess right...";
+    startGame.innerHTML = "Click to start!"
+ }
+/*     dispgameInstr.innerHTML = "Press a key to guess a country!";
+    disptotalWins.innerText = wins;
+    dispguessedLetters.innerHTML = wrongGuess;
+    dispuserMessage.innerHTML = ""
+    disppickedCountry.innerHTML = pickedCountryText;
+    dispremGuesses.innerHTML = remGuess;
+    dispkeyCont.innerHTML = "Win your dream vacation!!";
+    dispkeySubcont.innerHTML = "If you guess right..."; */
+
+
+// Play to win a vacation
+function guessCountry(letter) {
+        if (remGuess > 0) {
+        // Make sure we didn't use this letter yet
+        if (guessedKeys.indexOf(userGuess) >-1){
+            console.log("You've tried this before");
+            dispuserMessage.innerHTML = "You've guessed this letter before. Try a different one."
+        } else {
+            guessedKeys.push(userGuess);
+            console.log("You haven't guessed this key before. Let's check it!");
+            checkGuess();
+        }
+    
+    }
+}
 
 function checkGuess() {
+        
         for (var i=0; i<pickedCountry.length; i++) {
        			if(pickedCountry[i] === userGuess) {
-        				console.log("letter matches a letter in pickedCountry");
+        				console.log(userGuess + " letter matches a letter in pickedCountry");
         				letterPosition.push(i);
         				console.log({letterPosition});
       			 } 
 		} //end of for loop that checks of userGuess matches any letter in pickedCountry and pushes indices to letterPosition array.
 		
 		// if there are no indicies, remove a guess and update the remaining guesses displayed
-    if (letterPosition.length <= 0) {
-        remGuess--;
+        if (letterPosition.length<=0) {
         console.log({remGuess});
-		dispremgGuesses.innerHTML = remGuess;
+		dispremGuesses.innerHTML = remGuess;
 		wrongGuess.push(userGuess);
         dispguessedLetters.innerHTML = wrongGuess;
         dispuserMessage.innerHTML = "Try again."
         letterPosition = [];
         checkLoss();
         
-    } //end of if
-	else {
+        } //end of if
+	    else {
         // Loop through all the indicies and replace the '_' with a letter.
         for(var i = 0; i < letterPosition.length; i++) {
             countryText[letterPosition[i]] = userGuess;
@@ -123,7 +179,7 @@ function checkGuess() {
             
 			
         }//end of for
-	} //End of else
+	    } //End of else
 		
 		
 } //End of function		
@@ -139,59 +195,63 @@ function checkGuess() {
 function checkWin() {
     if(countryText.indexOf("_") === -1) {
 
+        isgameOver = true;
         wins++;
         disptotalWins.innerText = wins;
-        dispuserMessage.innerHTML = "CONGRATULATIONS! YOU WON!"
-        isgameOver = true;
+        dispuserMessage.innerHTML = ""
+        dispkeyCont.innerHTML = "You won a trip to " + pickedCountry + " !";
+        dispgameInstr.innerHTML = " CONGRATULATIONS!";
+        //Update image and display
+        dispimage.src = "assets/images/Uganda.png";
+        dispkeySubcont.innerHTML = "Go pack your Bags & Enjoy you Vacation!";
+
     }
 }
 
 function checkLoss(){
 
-    if(remGuess <= 0) {
+    if(remGuess === 0) {
         dispuserMessage.innerHTML = "Sorry, you lost. Would you like to try again?"
         isgameOver = true;
-    }
-}
-
-// Play to win a vacation
-function guessCountry(letter) {
-    if (remGuess > 0) {
-        // Make sure we didn't use this letter yet
-        if (guessedKeys.indexOf(userGuess) >-1){
-            console.log("You've tried this before");
-            dispuserMessage.innerHTML = "You've guessed this letter before. Try a different one."
-        } else {
-            guessedKeys.push(userGuess);
-            console.log("You haven't guessed this key before. Let's check it!");
-            checkGuess();
-        }
+        startGame.style.display = "block";
+        startGame.innerHTML = "Play Again?"
+        dispimage.src = "assets/images/vacationcalling.png";
+        dispgameInstr.innerHTML = "";
+        dispkeyCont.innerHTML = "Sorry, you lost.";
+        dispkeySubcont.innerHTML = "Would you like to try again?";
     
     }
 }
 
-/* Function to update display */
+
+
+/* Function to update display 
 
 function updateDisp(){
 
-    dispgameInstr.innerHTML = "Guess to Win a Vacation!";
+    dispgameInstr.innerHTML = "Press a key to guess a country!";
     disptotalWins.innerText = wins;
-    dispguessedLetters.innerHTML = guessedKeys;
+    dispguessedLetters.innerHTML = wrongGuess;
     dispuserMessage.innerHTML = ""
     disppickedCountry.innerHTML = pickedCountryText;
+    dispremGuesses.innerHTML = remGuess;
+    dispkeyCont.innerHTML = "Win your dream vacation!!";
+    dispkeySubcont.innerHTML = "If you guess right...";
 
 
-}
+} */
 
 /* Event listener */
 
 document.onkeyup = function(event) {
 
-    if(isgameOver) {
+    if(isgameOver === true) {
         
-        isgameOver = false;
-        dispuserMessage.innerHTML = "The game is Over."
+        dispuserMessage.innerHTML = "The game is Over. Would you like to play again?"
+        startGame.style.display = "block";
+        startGame.innerHTML = "Play Again?"
     } else {
+        
         userGuess = String.fromCharCode(event.keyCode).toUpperCase();
         console.log("You pressed " + userGuess);
         //Check if user has pressed this key before.
@@ -201,11 +261,17 @@ document.onkeyup = function(event) {
             console.log("You've tried this before");
             dispuserMessage.innerHTML = "You've guessed this letter before. Try a different one."
         } else {
+            remGuess--;
             guessedKeys.push(userGuess);
             console.log("You haven't guessed this key before. Let's check it!");
-            updateDisp();
-            checkGuess();
+            UpdateContent();
+            checkGuess(userGuess);
         }
     }
 } 
 
+//button listener
+
+startGame.addEventListener("click", function(){
+    initGame();
+});

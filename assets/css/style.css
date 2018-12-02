@@ -1,3 +1,9 @@
+body {
+    background-image: url("../images/gameNotstarted.png");
+    background-size: cover;
+    background-color: white;
+}
+
 .maincontent {
     margin-top: 20px;
 }
@@ -35,8 +41,17 @@ font-size: 25px;
     color: red;
 }
 
-/* Images */
- #gameoverpic, #winpic{ 
-    display: none;
-    margin: 0 auto;
+#startpic {
+    width: 400px;
+    height: 300px;
+}
+
+.gameStarted {
+   background: #e9ecef; 
+   flex-wrap: wrap;
+   padding: 20px 20px;  
+} 
+
+#dispgameInstr {
+    margin-top: 22px;
 }

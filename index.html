@@ -10,17 +10,21 @@
     
 </head>
 <body>
+    
     <div class="container">
         <div class="row maincontent">
             <div class="col">
                 <div class="jumbotron">
-                    <img class="startpic" src="assets/images/kyle-glenn-598701-unsplash_1024.png" alt="globe" width="300" height="auto">
+                    <img id = "startpic" src="assets/images/kyle-glenn-598701-unsplash_1024.png" alt="globe" width="400" height="auto">
                     <h2 id="keyCont">Win your dream vacation!</h2>
                     <br>
-                    <p>If you guess right...</p>
+                    <p id="keySubcont">If you guess right...</p>
+                    <br>
+                    <button type="button" id= "startBtn" class="btn btn-primary ">Click to Start</button>
                 </div>
             </div>
-            <div class="col gamecontent">
+            <div class="col" id="gamecontent">
+
                 <h2 id="dispgameInstr"></h2>
                 
                 <h5 class ="staticInfo">Wins</h5>
@@ -31,7 +35,7 @@
                 
                 <hr>
                 <h5 class ="staticInfo">Number of Guesses Remaining</h5>
-                <p id="dispremgGuesses" class="dynamicInfo"></p>
+                <p id="dispremGuesses" class="dynamicInfo"></p>
                
                 <hr>
                 <p id="dispuserMessage"></p>
