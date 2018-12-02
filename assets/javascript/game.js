@@ -35,7 +35,9 @@ var dispGame = document.getElementById("gamecontent");//This is the div that hos
 
 //Initial state
 
-dispGame.style.display = "none";
+dispGame.style.visibility = "hidden";
+
+
 
 /* Initialize the game.
 Display the text Press any key to start.
@@ -61,6 +63,7 @@ function initGame (){
 
     dispGame.classList.add("gameStarted");
     dispGame.style.display = "block";
+    dispGame.style.visibility = "visible";
    
     //hide start button
     startGame.style.display = "none";

@@ -4,10 +4,17 @@ body {
     background-color: white;
 }
 
+
+
 .maincontent {
     margin-top: 20px;
 }
 
+.keyContent {
+    background: none;
+    color:#e9ecef;
+        text-shadow: 3px 1px black;
+}
 gamecontent {
 
     border: 1px solid #cccccc;
@@ -50,6 +57,7 @@ font-size: 25px;
    background: #e9ecef; 
    flex-wrap: wrap;
    padding: 20px 20px;  
+   border-radius: 2%;
 } 
 
 #dispgameInstr {
