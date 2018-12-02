@@ -210,7 +210,7 @@ function checkWin() {
 
 function checkLoss(){
 
-    if(remGuess === 0) {
+    if(remGuess <=0) {
         dispuserMessage.innerHTML = "Sorry, you lost. Would you like to try again?"
         isgameOver = true;
         startGame.style.display = "block";
@@ -264,7 +264,7 @@ document.onkeyup = function(event) {
             remGuess--;
             guessedKeys.push(userGuess);
             console.log("You haven't guessed this key before. Let's check it!");
-            UpdateContent();
+            dispremGuesses.innerHTML = remGuess;
             checkGuess(userGuess);
         }
     }
