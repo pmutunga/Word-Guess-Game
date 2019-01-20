@@ -208,6 +208,7 @@ function checkWin() {
         dispimage.src = "assets/images/Uganda.png";
         dispkeySubcont.innerHTML = "Go pack your Bags & Enjoy you Vacation!";
 
+
     }
 }
 
